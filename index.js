@@ -5,6 +5,7 @@ const { handleError } = require("./middleware/errorHandler");
 const logger = require("./utils/logger");
 const mongooseConnectDB = require("./utils/mongo");
 const swagger = require("./utils/swagger");
+require("dotenv").config();
 
 const app = express();
 

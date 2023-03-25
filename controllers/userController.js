@@ -4,9 +4,10 @@ const jwt = require("jwt-simple");
 exports.register = async (req, res, next) => {
 	try {
 		const { username, password, email } = req.body;
-		const user = new User({ username, password, email });
+		const user = new User({ username, password, email, role: "user" });
 		await user.save();
-		res.status(201).json(user);
+		const token = jwt.encode({ userId: user.id, role: user.role }, "SECRET");
+		res.status(201).json({ token, userId: user.id });
 	} catch (error) {
 		next(error);
 	}
@@ -14,13 +15,13 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
 	try {
-		const { email, password } = req.body;
-		const user = await User.findOne({ email });
+		const { username, password } = req.body;
+		const user = await User.findOne({ email: username });
 		if (!user || user.password !== password) {
 			throw new Error("Invalid login credentials");
 		}
 		const token = jwt.encode({ userId: user.id, role: user.role }, "SECRET");
-		res.status(200).json({ token });
+		res.status(200).json({ token, userId: user.id });
 	} catch (error) {
 		next(error);
 	}
