@@ -116,6 +116,31 @@ exports.getUser = async (req, res, next) => {
 		next(error);
 	}
 };
+exports.updateUser = async (req, res, next) => {
+	try {
+		const user = req.body;
+		const { userId } = req.params;
+		const updatedUser = await User.updateOne({ _id: userId }, { $set: user });
+		if (!updatedUser) {
+			throw new Error("User update fail");
+		}
+		res.status(200).json(updatedUser);
+	} catch (error) {
+		next(error);
+	}
+};
+exports.deleteUser = async (req, res, next) => {
+	try {
+		const { userId } = req.params;
+		const deletedUser = await User.deleteOne({ _id: userId });
+		if (!deletedUser) {
+			throw new Error("User delete fail");
+		}
+		res.status(200).json(deletedUser);
+	} catch (error) {
+		next(error);
+	}
+};
 
 exports.getUsers = async (req, res, next) => {
 	try {

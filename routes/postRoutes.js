@@ -62,7 +62,7 @@ router.post("/", authenticate, createPost);
  *               items:
  *                 $ref: '#/components/schemas/Post'
  */
-router.get("/", authenticate, getPosts);
+router.get("/", getPosts);
 /**
  * @swagger
  * /api/posts/{postId}/comments:

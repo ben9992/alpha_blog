@@ -8,6 +8,8 @@ const {
 	followUser,
 	unfollowUser,
 	getUser,
+	updateUser,
+	deleteUser,
 	getUsers,
 } = require("../controllers/userController");
 const { authenticate, admin } = require("../middleware/authMiddleware");
@@ -258,6 +260,9 @@ router.post("/:userId/unfollow", authenticate, unfollowUser);
  *       '500':
  *         $ref: '#/components/responses/InternalServerError'
  */
+router.put("/:userId", authenticate, updateUser);
+router.delete("/:userId", authenticate, deleteUser);
+
 router.get("/:userId", authenticate, getUser);
 /**
  * @swagger
