@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const User = require("../models/userModel");
 
 exports.createPost = async (req, res, next) => {
 	try {
@@ -31,10 +32,12 @@ exports.addComment = async function addComment(req, res, next) {
 			return res.status(404).json({ error: "Post not found" });
 		}
 
+		const user = await User.findById(req.user.userId);
+
 		// Create a new comment
 		const comment = {
 			text,
-			author: req.user.userId,
+			author: { id: req.user.userId, username: user.username },
 		};
 
 		// Save the comment and update the post

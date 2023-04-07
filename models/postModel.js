@@ -37,14 +37,20 @@ const postSchema = new mongoose.Schema(
 					required: true,
 				},
 				author: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "User",
-					required: true,
+					id: {
+						type: mongoose.Schema.Types.ObjectId,
+						ref: "User",
+						required: true,
+					},
+					username: {
+						type: String,
+						required: true,
+					},
 				},
-				post: {
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "Post",
+				createdAt: {
+					type: mongoose.Schema.Types.Date,
 					required: true,
+					default: Date.now,
 				},
 			},
 		],
