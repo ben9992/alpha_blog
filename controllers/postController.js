@@ -14,7 +14,10 @@ exports.createPost = async (req, res, next) => {
 
 exports.getPosts = async (req, res, next) => {
 	try {
-		const posts = await Post.find().populate("user", "username profileImage");
+		const posts = await Post.find()
+			.populate("user", "username profileImage")
+			.sort({ createdAt: "desc" })
+			.exec();
 		res.status(200).json(posts);
 	} catch (error) {
 		next(error);

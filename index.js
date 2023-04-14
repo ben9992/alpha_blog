@@ -9,8 +9,10 @@ require("dotenv").config();
 
 const app = express();
 
-const dir = path.join(__dirname, "uploads");
-app.use("/uploads", express.static(dir));
+const uploadsdir = path.join(__dirname, "uploads");
+const imagesdir = path.join(__dirname, "images");
+app.use("/uploads", express.static(uploadsdir));
+app.use("/images", express.static(imagesdir));
 
 mongooseConnectDB();
 
