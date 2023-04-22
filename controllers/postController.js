@@ -72,6 +72,35 @@ exports.deletePost = async (req, res, next) => {
 	}
 };
 
+exports.deleteComment = async (req, res, next) => {
+	try {
+		const { commentId, postId } = req.params;
+		const { userId, role } = req.user;
+		const post = await Post.findById(postId);
+		if (!post) {
+			return res.status(404).json({ error: "Post not found" });
+		}
+
+		for (const comment of post.comments) {
+			if (comment.author.id.toString() === userId || role === "admin") {
+				if (comment._id.toString() === commentId) {
+					Post.updateOne(
+						{ _id: postId },
+						{ $pull: { comments: { _id: comment._id } } }
+					)
+						.then((res) => {})
+						.catch((err) => {});
+					return res.status(200).json({ message: "Comment deleted" });
+				}
+			}
+		}
+
+		res.status(500).json({ message: "Cannot delete comment" });
+	} catch (error) {
+		next(error);
+	}
+};
+
 exports.editPost = async (req, res, next) => {
 	try {
 		const { postId } = req.params;

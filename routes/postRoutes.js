@@ -5,6 +5,7 @@ const {
 	getPosts,
 	addComment,
 	deletePost,
+	deleteComment,
 	editPost,
 } = require("../controllers/postController");
 const { authenticate } = require("../middleware/authMiddleware");
@@ -132,7 +133,7 @@ router.post("/:postId/comments", authenticate, addComment);
  *       '500':
  *         $ref: '#/components/responses/InternalServerError'
  */
-router.delete("/:postId", authenticate, deletePost);
+router.delete("/:postId/", authenticate, deletePost);
 /**
  * @swagger
  * /api/posts/{postId}:
@@ -172,5 +173,7 @@ router.delete("/:postId", authenticate, deletePost);
  *         $ref: '#/components/responses/InternalServerError'
  */
 router.put("/:postId", authenticate, editPost);
+
+router.delete("/comments/:postId/:commentId", authenticate, deleteComment);
 
 module.exports = router;
