@@ -62,7 +62,7 @@ exports.deletePost = async (req, res, next) => {
 			return res.status(404).json({ error: "Post not found" });
 		}
 		if (post.user._id.toString() === userId || role === "admin") {
-			await Post.deleteOne(post);
+			await Post.findOneAndDelete({ _id: postId });
 			return res.status(200).json({ message: "Post deleted" });
 		}
 
@@ -96,6 +96,40 @@ exports.deleteComment = async (req, res, next) => {
 		}
 
 		res.status(500).json({ message: "Cannot delete comment" });
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.editComment = async (req, res, next) => {
+	try {
+		const { commentId, postId } = req.params;
+		const { userId, role } = req.user;
+		const { text } = req.body;
+		const post = await Post.findById(postId);
+		if (!post) {
+			return res.status(404).json({ error: "Post not found" });
+		}
+		let isFounded = false;
+		for await (const comment of post.comments) {
+			if (comment.author.id.toString() === userId || role === "admin") {
+				if (comment._id.toString() === commentId) {
+					isFounded = true;
+					await Post.findOneAndUpdate(
+						{ _id: postId, "comments._id": commentId },
+						{ $set: { "comments.$": { text: text, author: comment.author } } },
+						{ new: true }
+					)
+						.then(() => {
+							return res.status(200).json({ message: "Comment updated" });
+						})
+						.catch((err) => {
+							return res.status(500).json({ message: "Cannot update comment" });
+						});
+				}
+			}
+		}
+		if (!isFounded) res.status(500).json({ message: "Cannot delete comment" });
 	} catch (error) {
 		next(error);
 	}

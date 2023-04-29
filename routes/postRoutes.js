@@ -6,6 +6,7 @@ const {
 	addComment,
 	deletePost,
 	deleteComment,
+	editComment,
 	editPost,
 } = require("../controllers/postController");
 const { authenticate } = require("../middleware/authMiddleware");
@@ -175,5 +176,7 @@ router.delete("/:postId/", authenticate, deletePost);
 router.put("/:postId", authenticate, editPost);
 
 router.delete("/comments/:postId/:commentId", authenticate, deleteComment);
+
+router.put("/comments/:postId/:commentId", authenticate, editComment);
 
 module.exports = router;
