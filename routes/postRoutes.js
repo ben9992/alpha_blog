@@ -7,6 +7,7 @@ const {
 	deletePost,
 	deleteComment,
 	editComment,
+	postsAnalytics,
 	editPost,
 } = require("../controllers/postController");
 const { authenticate } = require("../middleware/authMiddleware");
@@ -64,6 +65,7 @@ router.post("/", authenticate, createPost);
  *               items:
  *                 $ref: '#/components/schemas/Post'
  */
+router.get("/analytics/all", authenticate, postsAnalytics);
 router.get("/", getPosts);
 /**
  * @swagger

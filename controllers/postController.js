@@ -24,6 +24,22 @@ exports.getPosts = async (req, res, next) => {
 	}
 };
 
+exports.postsAnalytics = async (req, res, next) => {
+	try {
+		const posts = await Post.find();
+		if (!posts) {
+			throw new Error("Posts Analytics fail");
+		}
+
+		const data = {
+			postCount: posts.length,
+		};
+		res.status(200).json(data);
+	} catch (error) {
+		next(error);
+	}
+};
+
 exports.addComment = async function addComment(req, res, next) {
 	const { postId } = req.params;
 	const { text } = req.body;
@@ -67,6 +83,24 @@ exports.deletePost = async (req, res, next) => {
 		}
 
 		res.status(500).json({ message: "Cannot delete post" });
+	} catch (error) {
+		next(error);
+	}
+};
+
+exports.userRemoved = async (userId) => {
+	try {
+		Post.updateMany(
+			{ "comments.author.id": userId },
+			{ $pull: { comments: { "author.id": userId } } }
+		).then(() => {
+			console.log("Successfully removed comments authored by user:", userId);
+
+			// Delete posts with user
+			Post.deleteMany({ user: userId }).then(() => {
+				console.log("Successfully deleted all posts with user:", userId);
+			});
+		});
 	} catch (error) {
 		next(error);
 	}

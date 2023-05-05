@@ -10,6 +10,7 @@ const {
 	getUser,
 	updateUser,
 	deleteUser,
+	usersAnalytics,
 	getUsers,
 } = require("../controllers/userController");
 const { authenticate, admin } = require("../middleware/authMiddleware");
@@ -264,6 +265,7 @@ router.put("/:userId", authenticate, updateUser);
 router.delete("/:userId", authenticate, deleteUser);
 
 router.get("/:userId", authenticate, getUser);
+router.get("/analytics/all", authenticate, usersAnalytics);
 /**
  * @swagger
  * /api/users:

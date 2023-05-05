@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const jwt = require("jwt-simple");
+const { userRemoved } = require("./postController");
 
 exports.register = async (req, res, next) => {
 	try {
@@ -129,9 +130,29 @@ exports.updateUser = async (req, res, next) => {
 		next(error);
 	}
 };
+exports.usersAnalytics = async (req, res, next) => {
+	try {
+		const users = await User.find();
+		if (!users) {
+			throw new Error("Users Analytics fail");
+		}
+
+		const data = {
+			userCount: users.length,
+		};
+
+		res.status(200).json(data);
+	} catch (error) {
+		next(error);
+	}
+};
+
 exports.deleteUser = async (req, res, next) => {
 	try {
 		const { userId } = req.params;
+
+		userRemoved(userId);
+
 		const deletedUser = await User.deleteOne({ _id: userId });
 		if (!deletedUser) {
 			throw new Error("User delete fail");
