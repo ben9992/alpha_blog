@@ -264,7 +264,7 @@ router.post("/:userId/unfollow", authenticate, unfollowUser);
 router.put("/:userId", authenticate, updateUser);
 router.delete("/:userId", authenticate, deleteUser);
 
-router.get("/:userId", authenticate, getUser);
+router.get("/:userId", getUser);
 router.get("/analytics/all", authenticate, usersAnalytics);
 /**
  * @swagger
